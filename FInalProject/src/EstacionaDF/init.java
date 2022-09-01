@@ -4,7 +4,8 @@ import EstacionaDF.FileManager.CSVManager;
 
 public class init {
     public static void main(String[] args) {
-         SystemApp app;
+        
+        SystemApp app;
         // General error treatment
         try {
             app = new SystemApp();
