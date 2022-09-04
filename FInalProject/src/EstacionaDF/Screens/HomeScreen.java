@@ -1,13 +1,11 @@
 package EstacionaDF.Screens;
 
 import javax.swing.*;
-
-import EstacionaDF.SystemApp;
-
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+import EstacionaDF.SystemApp;
 
 
 public class HomeScreen extends DefaultScreen{
@@ -21,10 +19,9 @@ public class HomeScreen extends DefaultScreen{
     public HomeScreen(SystemApp screenSys) {
         super(screenSys);        
         // Welcome label
-        setWelcome("<html><body align='center'><h1>Bem-vindo(a) ao<br>"
-        + screenSys.getTitle().toUpperCase() + "!</h1><br><br>"
-        + "<p>Cadastre seu veículo em nosso sistema para garantir<br>"
-        + "sua vaga no estacionmento X.<br><br></body></html>");
+        setWelcome(getScreenSys().getTextContent("welcome", 0)
+        + getScreenSys().getTitle()
+        + getScreenSys().getTextContent("intro", 0));
         getWelcome().setAlignmentX(SwingConstants.CENTER);
         placeElementGrid(getWelcome(), 0, 0, 3, 1);
         
@@ -33,14 +30,14 @@ public class HomeScreen extends DefaultScreen{
         this.boxPanel.setLayout(new FlowLayout());
 
         
-        setUserButton(new JButton("Usuário"));
+        setUserButton(new JButton(getScreenSys().getTextContent("userBtn", 0)));
         getUserButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 toUser(UserScreen.USER_HOME);
             }
         });
-        setAdmButton(new JButton("Administrador"));
+        setAdmButton(new JButton(getScreenSys().getTextContent("admBtn", 0)));
         getAdmButton().addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt2) {
                 //toAdm();
@@ -75,3 +72,4 @@ public class HomeScreen extends DefaultScreen{
     }
 
 }
+
