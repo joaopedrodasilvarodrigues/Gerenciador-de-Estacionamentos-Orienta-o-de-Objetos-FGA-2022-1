@@ -11,7 +11,7 @@ import java.awt.FlowLayout;
 
 public class UserScreen extends DefaultScreen {
     private JLabel intro;
-    private JButton register, takeBack, send;
+    private JButton register, takeBack;
     private JLabel allInfoRegister, allInfoTakeBack;
     private Box infoRegister, writeRegister;
     private JTextField vehiclePlate;
@@ -52,24 +52,19 @@ public class UserScreen extends DefaultScreen {
             }
         });
         // Intro text
-        setIntro(new JLabel(
-            "<html><h3 align='center'>O que você quer fazer,<br> usuário?</h3>"
-            + "<p>Escolha se você quer cadastrar um carro<br>"
-            + "e garantir sua vaga, ou retirar o seu carro<br>"
-            + "do estacionamento e pagar as devidas taxas.</p></html>"
-        ));
+        setIntro(new JLabel(getScreenSys().getTextContent("intro", 1)));
         placeElementGrid(getIntro(), 0, 1, 3, 1);
 
         // register and takeback btns.
         JPanel boxPanel = new JPanel(new FlowLayout());
-        setRegister(new JButton("Cadastrar"));
+        setRegister(new JButton(getScreenSys().getTextContent("registerBtn", 0)));
         getRegister().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 toUser(UserScreen.USER_REGISTER);
             }
         });
-        setTakeBack(new JButton("Retirar"));
+        setTakeBack(new JButton(getScreenSys().getTextContent("takeBackBtn", 0)));
         getTakeBack().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -98,10 +93,7 @@ public class UserScreen extends DefaultScreen {
         });
 
         //intro
-        setIntro(new JLabel(
-            "<html><h3>Cadastre seu Veículo</h3>"
-            + "<p>Preencha as informações abaixo e pressione<br>"
-            + "o botão \"Enviar\" no fim da página.<br><br></p></html>"));
+        setIntro(new JLabel(getScreenSys().getTextContent("intro", 2)));
         placeElementGrid(getIntro(), 0, 1, 3, 1);
 
 
@@ -112,7 +104,7 @@ public class UserScreen extends DefaultScreen {
         
     
         // plate
-        getInfoRegister().add(new JLabel("Placa"));
+        getInfoRegister().add(new JLabel(getScreenSys().getTextContent("plates", 0)));
         setVehiclePlate(new JTextField(20));
         getWriteRegister().add(getVehiclePlate());
         
@@ -123,7 +115,7 @@ public class UserScreen extends DefaultScreen {
         
         
         // Send
-        setRegister(new JButton("Registrar"));
+        setRegister(new JButton(getScreenSys().getTextContent("send", 0)));
         placeElementGrid(getRegister(), 1, 3);
 
         getScreenSys().pack();                
@@ -135,7 +127,7 @@ public class UserScreen extends DefaultScreen {
         createBackBtn(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                toUser(UserScreen.USER_HOME);;
+                toUser(UserScreen.USER_HOME);
             }
         });
         //intro
@@ -158,7 +150,7 @@ public class UserScreen extends DefaultScreen {
         getWriteRegister().add(Box.createVerticalStrut(25));
         
         // plate
-        getInfoRegister().add(new JLabel("Placa"));
+        getInfoRegister().add(new JLabel(getScreenSys().getTextContent("plates", 0)));
         setVehiclePlate(new JTextField(20));
         getWriteRegister().add(getVehiclePlate());
 
@@ -167,8 +159,8 @@ public class UserScreen extends DefaultScreen {
         bPanel.add(getWriteRegister());
         placeElementGrid(bPanel, 0, 2);
         // Send
-        setTakeBack(new JButton("Retirar"));
-        getTakeBack().addActionListener(new ActionListener() {
+        setTakeBack(new JButton(getScreenSys().getTextContent("takeBackBtn", 0)));
+        /* getTakeBack().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg2) {
                 String[] categoriesPlates = {"Placas", "Entrada", "Mensalista"};
@@ -196,7 +188,7 @@ public class UserScreen extends DefaultScreen {
                         };
                     };
             }
-        });
+        }); */
         placeElementGrid(getTakeBack(), 1, 3);
         getScreenSys().pack();
     
