@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<app 
+title="EstacionaDF"
+>
+    <home>
+        <welcome>&lt;html&gt;&lt;h1&gt;Bem vindo(a) ao&lt;br&gt;</welcome>
+        <intro>&lt;p&gt;Cadastre seu veículo em nosso sistema para&lt;br&gt;garantir sua vaga no estacionmento X.&lt;p&gt;</intro>
+        <userBtn>Usuário</userBtn>
+        <admBtn>Administrador</admBtn>
+    </home>
+    <user>
+        <home>
+            <back>Voltar</back>
+            <intro>&lt;html&gt;&lt;h3 align='center'&gt;O que você quer fazer,&lt;br&gt; usuário?&lt;/h3&gt;&lt;p&gt;Escolha se você quer cadastrar um carro&lt;br&gt;e garantir sua vaga, ou retirar o seu carro&lt;br&gt;do estacionamento e pagar as devidas taxas.&lt;/p&gt;&lt;/html&gt;&lt;/intro&lt;</intro>
+            <registerBtn>Cadastrar</registerBtn>
+            <takeBackBtn>Retirar</takeBackBtn>
+        </home>
+        <register>
+            <intro>&lt;html&gt;&lt;h3&gt;Cadastre seu Veículo&lt;/h3&gt;&lt;p&gt;Preencha as informações abaixo e pressione&lt;br&gt;o botão \"Enviar\" no fim da página.&lt;br&gt;&lt;br&gt;&lt;/p&gt;&lt;/html&gt;</intro>
+            <plates>Placas</plates>
+            <send>Enviar</send>
+        </register>
+        <takeBack>
+            <!-- the rest of tags here are repeated-->
+            <intro>&lt;html&gt;&lt;h3&gt;Retire seu Veículo&lt;/h3&gt;&lt;p&gt;Digite a placa do veículo abaixo e pressione&lt;br&gt;o botão \"Retirar\" no fim da página.&lt;br&gt;&lt;br&gt;&lt;/p&gt;&lt;/html&gt;</intro></takeBack>
+    </user>
+    <adm>
+        <home>
+            <intro></intro>
+        </home>
+        <parking>
+
+        </parking>
+        
+    </adm>
+</app>
