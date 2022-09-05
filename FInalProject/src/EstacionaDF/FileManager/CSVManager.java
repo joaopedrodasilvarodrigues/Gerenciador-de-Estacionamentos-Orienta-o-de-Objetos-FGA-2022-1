@@ -8,6 +8,7 @@ import javax.swing.JOptionPane;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 
 public class CSVManager {
@@ -18,13 +19,15 @@ public class CSVManager {
     private String categories = "";
     private int columns;
 
-    public CSVManager(String filename, String[] categories) {
+    public CSVManager(String filename, String[] categories) throws Exception {
         this.filename = filename;
         this.columns = categories.length;
         for (String category : categories) {
             this.categories += category + ", ";
         }
         this.categories = this.categories.substring(0, this.categories.length() - 2);
+        selectCSV();
+        close();
     }
 
     private void selectCSV() throws Exception {
@@ -156,10 +159,10 @@ public class CSVManager {
             }
         } else {
             close();
-            throw new Exception("Valor não encontrado.");
+            throw new NoSuchElementException("Valor não encontrado.");
         }
         if (! acceptMultiples) {
-            if (counter >= 1) {
+            if (counter > 1) {
                 close();
                 targetLines = "";
                 throw new Exception("Resultados com valores repetidos.");
@@ -190,6 +193,7 @@ public class CSVManager {
             setPlateWriter(new FileWriter(this.csvFile, false));
         } catch (IOException e) {
             e.printStackTrace();
+            close();
         }
 
         allOrganized.remove(delete);
@@ -202,7 +206,7 @@ public class CSVManager {
         }
 
         getPlateWriter().write(delete);
-        getPlateWriter().close();
+        close();
     }
 
     private FileWriter getPlateWriter() {
@@ -227,6 +231,4 @@ public class CSVManager {
             err.printStackTrace();
         }
     }
-
-
 }
