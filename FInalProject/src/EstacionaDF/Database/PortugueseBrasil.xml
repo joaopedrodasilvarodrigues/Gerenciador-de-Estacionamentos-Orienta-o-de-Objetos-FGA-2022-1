@@ -16,13 +16,17 @@ title="EstacionaDF"
             <takeBackBtn>Retirar</takeBackBtn>
         </home>
         <register>
-            <intro>&lt;html&gt;&lt;h3&gt;Cadastre seu Veículo&lt;/h3&gt;&lt;p&gt;Preencha as informações abaixo e pressione&lt;br&gt;o botão \"Enviar\" no fim da página.&lt;br&gt;&lt;br&gt;&lt;/p&gt;&lt;/html&gt;</intro>
+            <intro>&lt;html&gt;&lt;h3&gt;Cadastre seu Veículo&lt;/h3&gt;&lt;p&gt;Preencha as informações abaixo e pressione&lt;br&gt;o botão &quot;Enviar&quot; no fim da página.&lt;br&gt;&lt;br&gt;&lt;/p&gt;&lt;/html&gt;</intro>
             <plates>Placas</plates>
+            <mensalist>Mensalista?</mensalist>
+            <invalidInput>Erro: insira um valor válido</invalidInput>
             <send>Enviar</send>
+            <confirm>Confirmação</confirm>
+            <confirm>A ação foi realizado com sucesso</confirm>
         </register>
         <takeBack>
             <!-- the rest of tags here are repeated-->
-            <intro>&lt;html&gt;&lt;h3&gt;Retire seu Veículo&lt;/h3&gt;&lt;p&gt;Digite a placa do veículo abaixo e pressione&lt;br&gt;o botão \"Retirar\" no fim da página.&lt;br&gt;&lt;br&gt;&lt;/p&gt;&lt;/html&gt;</intro></takeBack>
+            <intro>&lt;html&gt;&lt;h3&gt;Retire seu Veículo&lt;/h3&gt;&lt;p&gt;Digite a placa do veículo abaixo e pressione&lt;br&gt;o botão &quot;Retirar&quot; no fim da página.&lt;br&gt;&lt;br&gt;&lt;/p&gt;&lt;/html&gt;</intro></takeBack>
     </user>
     <adm>
         <home>
