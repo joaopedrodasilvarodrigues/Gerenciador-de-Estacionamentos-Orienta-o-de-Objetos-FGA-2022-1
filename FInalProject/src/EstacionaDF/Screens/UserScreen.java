@@ -5,19 +5,24 @@ import EstacionaDF.SystemApp;
 import EstacionaDF.FileManager.CSVManager;
 
 import java.awt.event.ActionListener;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.NoSuchElementException;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
 import java.awt.FlowLayout;
 
 public class UserScreen extends DefaultScreen {
     private JLabel intro;
-    private JButton register, takeBack;
+    private JButton toRegisterBtn, toTakeBackBtn, register, takeBack;
+    private JCheckBox mensalist;
     private JLabel allInfoRegister, allInfoTakeBack;
     private Box infoRegister, writeRegister;
     private JTextField vehiclePlate;
     private JLabel priceInfo;
     private int actualSection;
     private CSVManager platesCSV;
+    private boolean insertedWrong;
     public static final int USER_HOME = 0;
     public static final int USER_REGISTER = 1;
     public static final int USER_TAKE_BACK = 2;
@@ -57,22 +62,22 @@ public class UserScreen extends DefaultScreen {
 
         // register and takeback btns.
         JPanel boxPanel = new JPanel(new FlowLayout());
-        setRegister(new JButton(getScreenSys().getTextContent("registerBtn", 0)));
-        getRegister().addActionListener(new ActionListener() {
+        setToRegisterBtn(new JButton(getScreenSys().getTextContent("registerBtn", 0)));
+        getToRegisterBtn().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 toUser(UserScreen.USER_REGISTER);
             }
         });
-        setTakeBack(new JButton(getScreenSys().getTextContent("takeBackBtn", 0)));
-        getTakeBack().addActionListener(new ActionListener() {
+        setToTakeBackBtn(new JButton(getScreenSys().getTextContent("takeBackBtn", 0)));
+        getToTakeBackBtn().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 toUser(UserScreen.USER_TAKE_BACK);
             }
         });
-        boxPanel.add(getRegister());
-        boxPanel.add(getTakeBack());
+        boxPanel.add(getToRegisterBtn());
+        boxPanel.add(getToTakeBackBtn());
         
         placeElementGrid(boxPanel, 0, 2, 3, 1);
         
@@ -88,7 +93,7 @@ public class UserScreen extends DefaultScreen {
         this.createBackBtn(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                toUser(UserScreen.USER_HOME);;
+                toUser(UserScreen.USER_HOME);
             }
         });
 
@@ -107,17 +112,64 @@ public class UserScreen extends DefaultScreen {
         getInfoRegister().add(new JLabel(getScreenSys().getTextContent("plates", 0)));
         setVehiclePlate(new JTextField(20));
         getWriteRegister().add(getVehiclePlate());
+
+        // Mensalist
+        getInfoRegister().add(new JLabel(getScreenSys().getTextContent("mensalist", 0)));
+        setMensalist(new JCheckBox());
+        getWriteRegister().add(getMensalist());
         
         JPanel bPanel = new JPanel(new FlowLayout());
         bPanel.add(getInfoRegister());
         bPanel.add(getWriteRegister());
         placeElementGrid(bPanel, 0, 2);
-        
-        
+        //Red error label
+        if (this.insertedWrong) {
+            JLabel errorMsg = new JLabel(getScreenSys().getTextContent("invalidInput", 0));
+            errorMsg.setForeground(Color.RED);
+            placeElementGrid(errorMsg, 0, 3);
+        }
+
         // Send
         setRegister(new JButton(getScreenSys().getTextContent("send", 0)));
-        placeElementGrid(getRegister(), 1, 3);
+        getRegister().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    setPlatesCSV(new CSVManager("plates.csv", getCategoriesPlates()));
+                    getPlatesCSV().findUser(getVehiclePlate().getText(), 0, true);
+                    // if this doesnt cause an error, throw an error here:
+                    // throw ValueAlreadyExistException;
+                }
+                catch(NoSuchElementException notFoundValue) {                    
+                    try {
+                        if (getVehiclePlate().getText().length() != 7) {
+                            throw new Exception("InvalidValueException");
+                        }
+                        getPlatesCSV().addLine(getVehiclePlate().getText(), LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")), String.valueOf(getMensalist().isSelected()));
+                        setInsertedWrong(false);
+                    } catch (Exception e1) {
+                        setInsertedWrong(true);
+                        toRegister();
 
+                    }
+                    if (!isInsertedWrong()) {
+                        new Thread(){
+                            @Override
+                            public void run() {
+                            JOptionPane.showMessageDialog(null, getScreenSys().getTextContent("confirm", 1), getScreenSys().getTextContent("confirm", 0), JOptionPane.WARNING_MESSAGE);                            
+                            };
+                        }.start();
+                        toHome();
+                    }
+                }   
+                catch (Exception otherError) {
+                    //throw Erro
+                    otherError.printStackTrace();
+                }
+                
+            }
+        });
+        placeElementGrid(getRegister(), 1, 4);
         getScreenSys().pack();                
     }
 
@@ -131,10 +183,7 @@ public class UserScreen extends DefaultScreen {
             }
         });
         //intro
-        setIntro(new JLabel(
-            "<html><h3>Retire seu Veículo</h3>"
-            + "<p>Digite a placa do veículo abaixo e pressione<br>"
-            + "o botão \"Retirar\" no fim da página.<br><br></p></html>"));
+        setIntro(new JLabel(getScreenSys().getTextContent("intro", 3)));
         placeElementGrid(getIntro(), 0, 1, 3, 1);
 
         /*
@@ -158,38 +207,50 @@ public class UserScreen extends DefaultScreen {
         bPanel.add(getInfoRegister());
         bPanel.add(getWriteRegister());
         placeElementGrid(bPanel, 0, 2);
+        
+        //red error label
+        if (this.insertedWrong) {
+            JLabel errorMsg = new JLabel(getScreenSys().getTextContent("invalidInput", 0));
+            errorMsg.setForeground(Color.RED);
+            placeElementGrid(errorMsg, 0, 3);
+        }
+
         // Send
         setTakeBack(new JButton(getScreenSys().getTextContent("takeBackBtn", 0)));
-        /* getTakeBack().addActionListener(new ActionListener() {
+        getTakeBack().addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent arg2) {
-                String[] categoriesPlates = {"Placas", "Entrada", "Mensalista"};
-                setPlatesCSV(new CSVManager("placas.csv", categoriesPlates));
-                    new Thread() {
-                        @Override
-                        public void run() {
-                            try {
-                                String[] results = getPlatesCSV().findUser(getVehiclePlate().getText(), 0, true).split(",");
-                                for (String result : results) {
-                                    int popAnswer = JOptionPane.showConfirmDialog(null, "Este é o seu veículo?" + result, "Veículo", JOptionPane.YES_NO_OPTION);
-                                    if (popAnswer == JOptionPane.YES_OPTION) {
-                                        // show the value to pay and confirm.
-                                    } else if(result != results[results.length - 1]) {
-                                        continue;
-                                    } else {
-                                        // throw "No such vehicle" Exception. Name it as you want.
-                                    }
-                                }   
-                            } catch (Exception e) {
-                                JLabel errorMsg = new JLabel("Erro: insira um valor válido");
-                                errorMsg.setForeground(Color.RED);
-                                getInfoRegister().add(errorMsg);
-                            }
-                        };
-                    };
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    setPlatesCSV(new CSVManager("plates.csv", getCategoriesPlates()));                    
+                    try {
+                        if (getVehiclePlate().getText().length() != 7) {
+                            throw new Exception("InvalidValueException");
+                        }
+                        setInsertedWrong(false);
+                        getPlatesCSV().deleteLine(getVehiclePlate().getText(), 0);
+                    } catch (Exception e1) {
+                        setInsertedWrong(true);
+                        toTakeBack();;
+
+                    }
+                    if (!isInsertedWrong()) {
+                        new Thread(){
+                            @Override
+                            public void run() {
+                            JOptionPane.showMessageDialog(null, getScreenSys().getTextContent("confirm", 1), getScreenSys().getTextContent("confirm", 0), JOptionPane.WARNING_MESSAGE);                            
+                            };
+                        }.start();
+                        toHome();
+                    }
+                }   
+                catch (Exception otherError) {
+                    //throw Erro
+                    otherError.printStackTrace();
+                }
+                
             }
-        }); */
-        placeElementGrid(getTakeBack(), 1, 3);
+        });
+        placeElementGrid(getTakeBack(), 1, 4);
         getScreenSys().pack();
     
     }
@@ -235,6 +296,22 @@ public class UserScreen extends DefaultScreen {
         return platesCSV;
     } public void setPlatesCSV(CSVManager platesCSV) {
         this.platesCSV = platesCSV;
+    } public JCheckBox getMensalist() {
+        return mensalist;
+    } public void setMensalist(JCheckBox mensalist) {
+        this.mensalist = mensalist;
+    } public JButton getToRegisterBtn() {
+        return toRegisterBtn;
+    } public void setToRegisterBtn(JButton toRegisterBtn) {
+        this.toRegisterBtn = toRegisterBtn;
+    } public JButton getToTakeBackBtn() {
+        return toTakeBackBtn;
+    } public void setToTakeBackBtn(JButton toTakeBackBtn) {
+        this.toTakeBackBtn = toTakeBackBtn;
+    } public boolean isInsertedWrong() {
+        return insertedWrong;
+    } public void setInsertedWrong(boolean insertedWrong) {
+        this.insertedWrong = insertedWrong;
     }
 
 }
