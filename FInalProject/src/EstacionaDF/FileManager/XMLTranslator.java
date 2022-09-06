@@ -26,10 +26,8 @@ public class XMLTranslator {
         // prepare to receive xml
         DocumentBuilderFactory dFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dFactory.newDocumentBuilder();
-        //get absolute path from PtBr XML file.
-        String command = "find . -type f -name " + languageFile.strip() + ".xml";
-        Process findFile = Runtime.getRuntime().exec(command);
-        Scanner filePathFinder = new Scanner(findFile.getInputStream());
+        Scanner filePathFinder = new Scanner("./src/EstacionaDF/Database/PortugueseBrasil.xml");
+        
         // access xml file
         Document doc = dBuilder.parse(new File(filePathFinder.nextLine()));
         filePathFinder.close();
