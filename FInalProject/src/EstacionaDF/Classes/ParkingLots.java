@@ -1,32 +1,46 @@
-package EstacionaDF.Classes;
+package trabalho2;
 
+import java.time.*;
+ 
 public class ParkingLots {
-
-	private String identifier, opening, closure;
+	private String identifier; 
+	private LocalTime opening, closure,nightDailyStartsAt,nightDailyEndsAt;
 	private short capacity;
-	private float priceFraction, discountHour, priceDiurnal, taxNocturnal;
+	private float priceFraction, discountHour, priceDiurnal, taxNocturnal, valuePerEvent, valuePerMonthlyPayer, contractorsTaxReturn;
 	
-	public ParkingLots(String identifier, String opening, String closure, short capacity, float priceFraction, float discountHour, float priceDiurnal, float taxNocturnal) {
+	public ParkingLots(String identifier, LocalTime opening, LocalTime closure, LocalTime nightDailyStartsAt, LocalTime nightDailyEndsAt, short capacity, float priceFraction, float discountHour, float priceDiurnal, float taxNocturnal, float  valuePerEvent, float valuePerMonthlyPayer, float contractorsTaxReturn) {
 		this.identifier = identifier;
 		this.opening = opening;
 		this.closure = closure;
+		this.nightDailyStartsAt = nightDailyStartsAt;
+		this.nightDailyEndsAt = nightDailyEndsAt;
 		this.capacity = capacity;
 		this.priceFraction = priceFraction;
 		this.discountHour = discountHour;
 		this.priceDiurnal = priceDiurnal;
 		this.taxNocturnal = taxNocturnal;
+		this.valuePerEvent = valuePerEvent;
+		this.valuePerMonthlyPayer = valuePerMonthlyPayer;
+		this.contractorsTaxReturn = contractorsTaxReturn;
 	}
 	
 	public String getIdentifier() {
 		return identifier;
 	}
 	
-	public String getOpening() {
+	public LocalTime getOpening() {
 		return opening;
 	}
 	
-	public String getlCosure() {
+	public LocalTime getlCosure() {
 		return closure;
+	}
+	
+	public LocalTime getNightDailyStartsAt() {
+		return nightDailyStartsAt;
+	}
+	public LocalTime getNightDailyEndsAt() {
+		return nightDailyEndsAt;
 	}
 	
 	public short getCapacity() {
@@ -47,5 +61,14 @@ public class ParkingLots {
 	
 	public float getTaxNocturnal() {
 		return taxNocturnal;
+	}
+	public float getValuePerEvent() {
+		return valuePerEvent;
+	}
+	public float getValuePerMonthlyPayer() {
+		return valuePerMonthlyPayer;
+	}
+	public float getContractorsTaxReturn() {
+		return contractorsTaxReturn;
 	}
 }
