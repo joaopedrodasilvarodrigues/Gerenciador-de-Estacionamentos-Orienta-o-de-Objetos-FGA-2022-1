@@ -131,7 +131,6 @@ public class UserScreen extends DefaultScreen {
             JLabel errorMsg = new JLabel(getScreenSys().getTextContent("invalidInput", 0));
             errorMsg.setForeground(Color.RED);
             placeElementGrid(errorMsg, 0, 3);
-            this.insertedWrong = false;
         }
 
         // Send
@@ -157,7 +156,7 @@ public class UserScreen extends DefaultScreen {
                         getPlatesCSV().addLine(freshMessage, LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")), String.valueOf(getMensalist().isSelected()));
                         setInsertedWrong(false);
                     }
-                     catch (BlankFieldException | InvalidValueException e1) {
+                     catch (BlankFieldException | InvalidValueException | NumberFormatException e1) {
                         setInsertedWrong(true);
                         toRegister();
                     }
