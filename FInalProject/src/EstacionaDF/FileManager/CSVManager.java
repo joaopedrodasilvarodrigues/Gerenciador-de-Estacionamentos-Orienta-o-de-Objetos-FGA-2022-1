@@ -38,12 +38,7 @@ public class CSVManager {
         try {
             // equivalent to set Plate File
             // change location when go out of an project editor
-            if (System.getProperty("os.name").contains("Windows")) {
-                this.csvFile = new File(".\\src\\EstacionaDF\\Database\\" + this.filename + ".csv");
-            } else {
-                this.csvFile = new File("./src/EstacionaDF/Database/" + this.filename + ".csv");    
-            }
-            
+            this.csvFile = new File("./src/EstacionaDF/Database/" + this.filename + ".csv");
             // if there isn't any file 
             if (this.csvFile.createNewFile()) {
                 System.out.println("File created with success");
