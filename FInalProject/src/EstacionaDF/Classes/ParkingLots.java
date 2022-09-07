@@ -4,7 +4,7 @@ import java.time.*;
  
 public class ParkingLots {
 	private String identifier; 
-	private LocalTime opening, closure,nightDailyStartsAt,nightDailyEndsAt;
+	private LocalTime opening, closure, nightDailyStartsAt, nightDailyEndsAt;
 	private short capacity;
 	private float priceFraction, discountHour, priceDiurnal, taxNocturnal, valuePerEvent, valuePerMonthlyPayer, contractorsTaxReturn;
 	
