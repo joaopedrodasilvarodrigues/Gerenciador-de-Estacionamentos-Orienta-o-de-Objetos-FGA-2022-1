@@ -2,6 +2,7 @@ package EstacionaDF.FileManager;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import java.io.File;
@@ -26,8 +27,16 @@ public class XMLTranslator {
         // prepare to receive xml
         DocumentBuilderFactory dFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dFactory.newDocumentBuilder();
-        Scanner filePathFinder = new Scanner("./src/EstacionaDF/Database/PortugueseBrasil.xml");
-        
+        //get absolute path from PtBr XML file.
+        //String command = "find . -type f -name " + languageFile.strip() + ".xml";
+        //Process findFile = Runtime.getRuntime().exec(command);
+        //Scanner filePathFinder = new Scanner(findFile.getInputStream());
+        Scanner filePathFinder;
+        if (System.getProperty("os.name").contains("Windows")) {
+            filePathFinder = new Scanner(".\\src\\EstacionaDF\\Database\\PortugueseBrasil.xml");
+        } else {
+            filePathFinder = new Scanner("./src/EstacionaDF/Database/PortugueseBrasil.xml");
+        }
         // access xml file
         Document doc = dBuilder.parse(new File(filePathFinder.nextLine()));
         filePathFinder.close();
@@ -39,3 +48,4 @@ public class XMLTranslator {
     }
 
 }
+
