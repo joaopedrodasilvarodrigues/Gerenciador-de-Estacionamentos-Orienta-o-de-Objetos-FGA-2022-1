@@ -1,19 +1,16 @@
 package EstacionaDF;
-import javax.swing.JOptionPane;
-import EstacionaDF.FileManager.CSVManager;
+
+import EstacionaDF.EstacionaExceptions.CSVManagerExceptions;
 
 public class init {
     public static void main(String[] args) {
-        
-        SystemApp app;
+         SystemApp app;
         // General error treatment
         try {
             app = new SystemApp();
-        }
-        // Place to insert other catches if you want. 
-        
-        catch (Exception e) {
-        // last case treatment
+        } catch (Exception e) {
+            CSVManagerExceptions.errorMessage(e, "FATAL ERROR!!!");
+            app = null;
         }
         
     }
