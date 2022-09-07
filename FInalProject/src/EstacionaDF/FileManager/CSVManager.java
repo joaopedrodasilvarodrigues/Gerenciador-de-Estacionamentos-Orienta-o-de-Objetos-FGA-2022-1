@@ -10,6 +10,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import EstacionaDF.EstacionaExceptions.BlankFieldException;
+import EstacionaDF.EstacionaExceptions.RepeatedValue;
+
 
 public class CSVManager {
     private File csvFile;
@@ -18,6 +21,7 @@ public class CSVManager {
     private String filename;
     private String categories = "";
     private int columns;
+
 
     public CSVManager(String filename, String[] categories) throws Exception {
         this.filename = filename;
@@ -30,11 +34,16 @@ public class CSVManager {
         close();
     }
 
-    private void selectCSV() throws Exception {
+    private void selectCSV() throws IOException {
         try {
             // equivalent to set Plate File
             // change location when go out of an project editor
-            this.csvFile = new File("./src/EstacionaDF/Database/" + this.filename);
+            if (System.getProperty("os.name").contains("Windows")) {
+                this.csvFile = new File(".\\src\\EstacionaDF\\Database\\" + this.filename + ".csv");
+            } else {
+                this.csvFile = new File("./src/EstacionaDF/Database/" + this.filename + ".csv");    
+            }
+            
             // if there isn't any file 
             if (this.csvFile.createNewFile()) {
                 System.out.println("File created with success");
@@ -52,32 +61,31 @@ public class CSVManager {
             } 
         } catch (Exception e) {
             this.close();
-            System.out.println("\nError\n");
-            throw e;
+            throw new IOException("Problem with opening the file");
         }
         
 
     }
 
-    public void clean() // throws an "File doesn't exist" Exception. Name it as you want. 
+    public void clean() throws IOException 
     {
         this.csvFile = new File(this.filename);
         if (csvFile.exists()) {
             csvFile.delete();
         }
         else {
-            // throw new "File doesn't exist" Exception
+            throw new IOException("File doesn't exist");
         }
     }
     
-    public void addLine(String... details) throws Exception {
+    public void addLine(String... details) throws BlankFieldException, IOException {
         if (this.columns == details.length) {
             selectCSV();
             String toWrite = "";
             int counter = 0;
             for (String detail : details) {
                 if (detail.isBlank()) {
-                    throw new Exception("Há algum campo em branco");
+                    throw new BlankFieldException();
                 } else if (counter != details.length - 1){
                     toWrite += detail + ", ";     
                 } else {
@@ -90,7 +98,7 @@ public class CSVManager {
         }
         else {
             close();
-            throw new Exception("Há algum campo em branco");    
+            throw new BlankFieldException();    
         }
         
     }
@@ -103,11 +111,17 @@ public class CSVManager {
         return lines;
     }
     public void showContent() throws Exception {
-        String text = "";
+        String table = "";
         for (String lines : readAllLines()) {
-            text += lines + "\n";
+            table += lines + "\n";
         }
-        JOptionPane.showMessageDialog(null, "<html><h2>Histórico:</h2><br></html>" + text, "Placas", JOptionPane.PLAIN_MESSAGE);
+        final String table2 = table;
+        new Thread("CSV Table"){
+            @Override
+            public void run() {
+                JOptionPane.showMessageDialog(null, "<html><h2>Histórico:</h2><br></html>" + table2, "Placas", JOptionPane.PLAIN_MESSAGE);
+            }
+        }.start();
         close();
     }
     private ArrayList<String> ColumnToTheStart(ArrayList<String> lineByLine, int categoryColumn) throws Exception {
@@ -137,7 +151,7 @@ public class CSVManager {
 
     }
 
-    public String findUser(String withWhat, int categoryColumn, boolean acceptMultiples) throws Exception {
+    public String findUser(String withWhat, int categoryColumn, boolean acceptMultiples) throws NoSuchElementException, IOException, RepeatedValue, Exception {
         selectCSV();
         String targetLines = "";
         int counter = 0;
@@ -165,7 +179,7 @@ public class CSVManager {
             if (counter > 1) {
                 close();
                 targetLines = "";
-                throw new Exception("Resultados com valores repetidos.");
+                throw new RepeatedValue(withWhat, getFilename());
             } else {
                 targetLines = targetLines.replaceAll(";", "");
             }
@@ -178,24 +192,23 @@ public class CSVManager {
 
     //DONT CLOSE THE <HTML> TAG!!!
     public void showSearch(String withWhat, int categoryColumn) throws Exception {
-        JOptionPane.showMessageDialog(null,
-        "<html><h2>Resultados da pesquisa</h2><br>"
-        + findUser(withWhat, categoryColumn, true).replaceAll(";", "\n"),
-        "Pesquisa", JOptionPane.PLAIN_MESSAGE);
+        
+        String results = findUser(withWhat, categoryColumn, true).replaceAll(";", "\n");
+        new Thread("Results Screen") {
+            @Override
+            public void run() {
+                JOptionPane.showMessageDialog(null,
+                "<html><h2>Resultados da pesquisa</h2><br>" + results, "Pesquisa", JOptionPane.PLAIN_MESSAGE);
+            }
+        }.start();
     }
 
-    public void deleteLine(String withWhat, int categoryColumn) throws Exception {
+    public void deleteLine(String withWhat, int categoryColumn) throws NoSuchElementException, RepeatedValue, Exception {
         ArrayList<String> allOrganized = ColumnToTheStart(readAllLines(), categoryColumn);
         String delete = findUser(withWhat, categoryColumn, false);
         close();
         // In order to not append when rewritting the document
-        try {
-            setPlateWriter(new FileWriter(this.csvFile, false));
-        } catch (IOException e) {
-            e.printStackTrace();
-            close();
-        }
-
+        setPlateWriter(new FileWriter(this.csvFile, false));
         allOrganized.remove(delete);
         allOrganized = this.ColumnToTheStart(allOrganized, categoryColumn);
         // now "delete" is going to perform the task of the container to the rewritten text.
@@ -209,6 +222,9 @@ public class CSVManager {
         close();
     }
 
+    public String getFilename() {
+        return filename;
+    }
     private FileWriter getPlateWriter() {
         return fileWriter;
     } private void setPlateWriter(FileWriter plateWriter) {
@@ -231,4 +247,6 @@ public class CSVManager {
             err.printStackTrace();
         }
     }
+
+
 }
