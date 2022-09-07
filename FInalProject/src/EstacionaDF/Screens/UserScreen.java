@@ -161,8 +161,8 @@ public class UserScreen extends DefaultScreen {
                         toRegister();
                     }
                     // Unexpected erros
-                    catch(Exception others) {
-                        CSVManagerExceptions.errorMessage(others, "message");
+                    catch(Exception technicalError) {
+                        CSVManagerExceptions.errorMessage(technicalError, technicalError.getStackTrace().toString());
                         toHome();
                     }
                     // confirm action
@@ -181,8 +181,8 @@ public class UserScreen extends DefaultScreen {
                     toRegister();
                 }
                 // unexpected
-                catch (Exception otherError) {
-                    CSVManagerExceptions.errorMessage(otherError, "message");
+                catch (Exception techinicalError) {
+                    CSVManagerExceptions.errorMessage(techinicalError, techinicalError.getStackTrace().toString());
                     toHome();
                 }
                 
@@ -239,19 +239,25 @@ public class UserScreen extends DefaultScreen {
         getTakeBack().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                String freshMessage = getVehiclePlate().getText().replaceAll(" ", "");
                 try {
-                    setPlatesCSV(new CSVManager("plates.csv", getCategoriesPlates()));                    
+                    setPlatesCSV(new CSVManager("plates", getCategoriesPlates()));                    
                     try {
-                        if (getVehiclePlate().getText().length() != 7) {
-                            throw new Exception("InvalidValueException");
+                        if (freshMessage.length() != 7) {
+                            throw new InvalidValueException(freshMessage, getPlatesCSV().getFilename());
                         }
                         setInsertedWrong(false);
                         getPlatesCSV().deleteLine(getVehiclePlate().getText(), 0);
-                    } catch (Exception e1) {
+                    } catch (NoSuchElementException | InvalidValueException userError) {
                         setInsertedWrong(true);
-                        toTakeBack();;
+                        toTakeBack();
 
+                    } catch(Exception technicalError) {
+                        CSVManagerExceptions.errorMessage(technicalError, technicalError.getStackTrace().toString());
+                        toHome();
                     }
+
+
                     if (!isInsertedWrong()) {
                         new Thread(){
                             @Override
@@ -262,11 +268,10 @@ public class UserScreen extends DefaultScreen {
                         toHome();
                     }
                 }   
-                catch (Exception otherError) {
-                    //throw Erro
-                    otherError.printStackTrace();
+                catch (Exception technicalError) {
+                    CSVManagerExceptions.errorMessage(technicalError, "FATAL ERROR");
+                    toHome();
                 }
-                
             }
         });
         placeElementGrid(getTakeBack(), 1, 4);
