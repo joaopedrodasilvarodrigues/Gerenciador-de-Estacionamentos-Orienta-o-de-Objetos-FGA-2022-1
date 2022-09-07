@@ -2,9 +2,14 @@ package EstacionaDF.Screens;
 import javax.swing.*;
 
 import EstacionaDF.SystemApp;
+import EstacionaDF.EstacionaExceptions.BlankFieldException;
+import EstacionaDF.EstacionaExceptions.CSVManagerExceptions;
+import EstacionaDF.EstacionaExceptions.InvalidValueException;
+import EstacionaDF.EstacionaExceptions.RepeatedValue;
 import EstacionaDF.FileManager.CSVManager;
 
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.NoSuchElementException;
@@ -13,8 +18,7 @@ import java.awt.Color;
 import java.awt.FlowLayout;
 
 public class UserScreen extends DefaultScreen {
-    private JLabel intro;
-    private JButton toRegisterBtn, toTakeBackBtn, register, takeBack;
+    private JButton register, takeBack;
     private JCheckBox mensalist;
     private JLabel allInfoRegister, allInfoTakeBack;
     private Box infoRegister, writeRegister;
@@ -28,7 +32,7 @@ public class UserScreen extends DefaultScreen {
     public static final int USER_TAKE_BACK = 2;
     
     
-    public UserScreen(SystemApp screenSys, int section) {
+    public UserScreen(SystemApp screenSys, int section){
         super(screenSys);
         this.actualSection = section;
         // section manager
@@ -62,22 +66,22 @@ public class UserScreen extends DefaultScreen {
 
         // register and takeback btns.
         JPanel boxPanel = new JPanel(new FlowLayout());
-        setToRegisterBtn(new JButton(getScreenSys().getTextContent("registerBtn", 0)));
-        getToRegisterBtn().addActionListener(new ActionListener() {
+        setRegister(new JButton(getScreenSys().getTextContent("registerBtn", 0)));
+        getRegister().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 toUser(UserScreen.USER_REGISTER);
             }
         });
-        setToTakeBackBtn(new JButton(getScreenSys().getTextContent("takeBackBtn", 0)));
-        getToTakeBackBtn().addActionListener(new ActionListener() {
+        setTakeBack(new JButton(getScreenSys().getTextContent("takeBackBtn", 0)));
+        getTakeBack().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 toUser(UserScreen.USER_TAKE_BACK);
             }
         });
-        boxPanel.add(getToRegisterBtn());
-        boxPanel.add(getToTakeBackBtn());
+        boxPanel.add(getRegister());
+        boxPanel.add(getTakeBack());
         
         placeElementGrid(boxPanel, 0, 2, 3, 1);
         
@@ -87,7 +91,7 @@ public class UserScreen extends DefaultScreen {
     }
 
 
-    public void toRegister() {
+    public void toRegister(){
         cleanPage();
         // back btn
         this.createBackBtn(new ActionListener(){
@@ -127,6 +131,7 @@ public class UserScreen extends DefaultScreen {
             JLabel errorMsg = new JLabel(getScreenSys().getTextContent("invalidInput", 0));
             errorMsg.setForeground(Color.RED);
             placeElementGrid(errorMsg, 0, 3);
+            this.insertedWrong = false;
         }
 
         // Send
@@ -134,37 +139,52 @@ public class UserScreen extends DefaultScreen {
         getRegister().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                String freshMessage = getVehiclePlate().getText().replaceAll(" ", "");
                 try {
-                    setPlatesCSV(new CSVManager("plates.csv", getCategoriesPlates()));
-                    getPlatesCSV().findUser(getVehiclePlate().getText(), 0, true);
-                    // if this doesnt cause an error, throw an error here:
-                    // throw ValueAlreadyExistException;
+                    setPlatesCSV(new CSVManager("plates", getCategoriesPlates()));
+                    // check if there is at least one register with the same plate
+                    // Eliminate copied or fake plates
+                    getPlatesCSV().findUser(freshMessage, 0, false);
+                    throw new RepeatedValue(freshMessage, getPlatesCSV().getFilename());
                 }
+                //error condition to add a line to the database
                 catch(NoSuchElementException notFoundValue) {                    
                     try {
-                        if (getVehiclePlate().getText().length() != 7) {
-                            throw new Exception("InvalidValueException");
+                        Integer.valueOf(freshMessage);
+                        if (freshMessage.length() != 7) {
+                            throw new InvalidValueException(freshMessage, getPlatesCSV().getFilename());
                         }
-                        getPlatesCSV().addLine(getVehiclePlate().getText(), LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")), String.valueOf(getMensalist().isSelected()));
+                        getPlatesCSV().addLine(freshMessage, LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")), String.valueOf(getMensalist().isSelected()));
                         setInsertedWrong(false);
-                    } catch (Exception e1) {
+                    }
+                     catch (BlankFieldException | InvalidValueException e1) {
                         setInsertedWrong(true);
                         toRegister();
-
                     }
+                    // Unexpected erros
+                    catch(Exception others) {
+                        CSVManagerExceptions.errorMessage(others, "message");
+                        toHome();
+                    }
+                    // confirm action
                     if (!isInsertedWrong()) {
                         new Thread(){
                             @Override
                             public void run() {
-                            JOptionPane.showMessageDialog(null, getScreenSys().getTextContent("confirm", 1), getScreenSys().getTextContent("confirm", 0), JOptionPane.WARNING_MESSAGE);                            
+                                JOptionPane.showMessageDialog(null, getScreenSys().getTextContent("confirm", 1), getScreenSys().getTextContent("confirm", 0), JOptionPane.WARNING_MESSAGE);                            
                             };
                         }.start();
                         toHome();
                     }
-                }   
+                }
+                catch (RepeatedValue similar) {
+                    setInsertedWrong(true);
+                    toRegister();
+                }
+                // unexpected
                 catch (Exception otherError) {
-                    //throw Erro
-                    otherError.printStackTrace();
+                    CSVManagerExceptions.errorMessage(otherError, "message");
+                    toHome();
                 }
                 
             }
@@ -260,10 +280,6 @@ public class UserScreen extends DefaultScreen {
         return vehiclePlate;
     } public void setVehiclePlate(JTextField vehiclePlate) {
         this.vehiclePlate = vehiclePlate;
-    } public JLabel getIntro() {
-        return intro;
-    } public void setIntro(JLabel intro) {
-        this.intro = intro;
     } public JButton getRegister() {
         return register;
     } public void setRegister(JButton register) {
@@ -300,14 +316,6 @@ public class UserScreen extends DefaultScreen {
         return mensalist;
     } public void setMensalist(JCheckBox mensalist) {
         this.mensalist = mensalist;
-    } public JButton getToRegisterBtn() {
-        return toRegisterBtn;
-    } public void setToRegisterBtn(JButton toRegisterBtn) {
-        this.toRegisterBtn = toRegisterBtn;
-    } public JButton getToTakeBackBtn() {
-        return toTakeBackBtn;
-    } public void setToTakeBackBtn(JButton toTakeBackBtn) {
-        this.toTakeBackBtn = toTakeBackBtn;
     } public boolean isInsertedWrong() {
         return insertedWrong;
     } public void setInsertedWrong(boolean insertedWrong) {
