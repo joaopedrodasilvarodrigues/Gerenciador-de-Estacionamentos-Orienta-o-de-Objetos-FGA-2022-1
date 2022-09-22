@@ -3,7 +3,7 @@
 title="EstacionaDF"
 >
     <home>
-        <welcome>&lt;html&gt;&lt;h1&gt;Bem vindo(a) ao&lt;br&gt;</welcome>
+        <welcome class="page">&lt;html&gt;&lt;h1&gt;Bem vindo(a) ao&lt;br&gt;</welcome>
         <intro>&lt;p&gt;Cadastre seu veículo em nosso sistema para&lt;br&gt;garantir sua vaga no estacionmento X.&lt;p&gt;</intro>
         <userBtn>Usuário</userBtn>
         <admBtn>Administrador</admBtn>
@@ -11,12 +11,12 @@ title="EstacionaDF"
     <user>
         <home>
             <back>Voltar</back>
-            <intro>&lt;html&gt;&lt;h3 align='center'&gt;O que você quer fazer,&lt;br&gt; usuário?&lt;/h3&gt;&lt;p&gt;Escolha se você quer cadastrar um carro&lt;br&gt;e garantir sua vaga, ou retirar o seu carro&lt;br&gt;do estacionamento e pagar as devidas taxas.&lt;/p&gt;&lt;/html&gt;&lt;/intro&lt;</intro>
+            <intro>&lt;html&gt;&lt;h3 align='center'&gt;O que você quer fazer,&lt;br&gt; usuário?&lt;/h3&gt;&lt;br&gt;&lt;p&gt;Escolha se você quer cadastrar um carro&lt;br&gt;e garantir sua vaga, ou retirar o seu carro&lt;br&gt;do estacionamento e pagar as devidas taxas.&lt;/p&gt;&lt;/html&gt;</intro>
             <registerBtn>Cadastrar</registerBtn>
             <takeBackBtn>Retirar</takeBackBtn>
         </home>
         <register>
-            <intro>&lt;html&gt;&lt;h3&gt;Cadastre seu Veículo&lt;/h3&gt;&lt;p&gt;Preencha as informações abaixo e pressione&lt;br&gt;o botão &quot;Enviar&quot; no fim da página.&lt;br&gt;&lt;br&gt;&lt;/p&gt;&lt;/html&gt;</intro>
+            <intro>&lt;html&gt;&lt;h3&gt;Cadastre seu Veículo&lt;/h3&gt;&lt;br&gt;&lt;p&gt;Preencha as informações abaixo e pressione&lt;br&gt;o botão &quot;Enviar&quot; no fim da página.&lt;br&gt;&lt;br&gt;&lt;/p&gt;&lt;/html&gt;</intro>
             <plates>Placas</plates>
             <mensalist>Mensalista?</mensalist>
             <invalidInput>Erro: insira um valor válido</invalidInput>
@@ -26,18 +26,58 @@ title="EstacionaDF"
         </register>
         <takeBack>
             <!-- the rest of tags here are repeated-->
-            <intro>&lt;html&gt;&lt;h3&gt;Retire seu Veículo&lt;/h3&gt;&lt;p&gt;Digite a placa do veículo abaixo e pressione&lt;br&gt;o botão &quot;Retirar&quot; no fim da página.&lt;br&gt;&lt;br&gt;&lt;/p&gt;&lt;/html&gt;</intro></takeBack>
+            <intro>&lt;html&gt;&lt;h3&gt;Retire seu Veículo&lt;/h3&gt;&lt;br&gt;&lt;p&gt;Digite a placa do veículo abaixo e pressione&lt;br&gt;o botão &quot;Retirar&quot; no fim da página.&lt;br&gt;&lt;br&gt;&lt;/p&gt;&lt;/html&gt;</intro></takeBack>
     </user>
     <adm>
         <home>
-            <back>Voltar</back>
-            <intro>&lt;html&gt;&lt;h3&gt;Bem- vindo Administrador&lt;/h3&gt;&lt;p&gt;Preencha as informações abaixo e pressione&lt;br&gt;o botão &quot;Enviar&quot; no fim da página.&lt;br&gt;&lt;br&gt;&lt;/p&gt;&lt;/html&gt;</intro>
-            <platesBtn>Gerenciar placas</platesBtn>
+            <intro>&lt;html&gt;&lt;h3 align='center'&gt;O que você quer fazer,&lt;br&gt;admnistrador?.&lt;/h3&gt;&lt;br&gt;&lt;p&gt;Escolha a configuração na qual tem interesse&lt;/p&gt;&lt;/html&gt;</intro>
+            <plates>Base de Veículos</plates>
+            <parking>Estacionamento</parking>
+            <events>Eventos</events>
         </home>
-        <parking>
-            <value> Preços por hora </value>
-            <vacancy>Vagas disponíveis</vacancy>
-        </parking>
+        <plates>
+            <intro>&lt;html&gt;&lt;h3 align='center'&gt;Cadastros Realizados&lt;/h3&gt;&lt;br&gt;&lt;p&gt;Onde é possível vizualizar e editar todos os cadastros&lt;br&gt;de veículos que não tenham sido removidos do sistema&lt;/p&gt;&lt;/html&gt;</intro>
+            <editBtn>Editar</editBtn>
+            <seeBtn>Ver Tudo</seeBtn>
+            <plateStructure>
+                <plate>Placa</plate>
+                <Entry>Horário de Entrada</Entry>
+                <mensalist>Mensalista?</mensalist>
+            </plateStructure>
+        </plates>
         
+        <events>
+            <intro>&lt;html&gt;&lt;h3 align='center'&gt;Eventos&lt;/h3&gt;&lt;br&gt;&lt;p&gt;Escolha a configuração na qual tem interesse&lt;/p&gt;&lt;/html&gt;</intro>
+            <newEventBtn>Cadastrar</newEventBtn>
+            <seeBtn>Ver Tudo</seeBtn>
+            <deleteBtn>Deletar Evento</deleteBtn>
+            <eventStructure>
+                <name>Nome</name>
+                <startDate>Começa</startDate>
+                <endDate>Termina</endDate>
+            </eventStructure>
+        </events>
+
+        <parking>
+            <intro>&lt;html&gt;&lt;h3 align='center'&gt;Atualize os dados do seu&lt;br&gt;estacionamento.&lt;/h3&gt;&lt;br&gt;&lt;p&gt;Preencha os dados do seu estacionamento atual abaixo.&lt;br&gt;Os dados já escritos são referentes aos dados do seu estacionamento atual.&lt;/p&gt;&lt;/html&gt;</intro>
+            <name>Nome</name>
+            <values>
+                <fraction>Por 15 min</fraction>
+                <hour type="discount">Por hora</hour>
+                <day>Por dia</day>
+                <night>Por noite</night>
+                <month>Por mês</month>
+            </values>
+            <capacity>Capacidade</capacity>
+            <day>
+                <starts>Período de Trabalho Diurno começa</starts>
+                <ends>Período de Trabalho Diurno acaba</ends>
+            </day>
+            <night>
+                <starts>Período de Trabalho Noturno começa</starts>
+                <ends>Período de Trabalho Noturno acaba</ends>
+            </night>
+            <send>Atualizar</send>
+        </parking>
     </adm>
 </app>

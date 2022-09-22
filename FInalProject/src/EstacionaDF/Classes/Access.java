@@ -1,6 +1,7 @@
 package EstacionaDF.Classes;
 
 import java.time.*;
+import EstacionaDF.Classes.ParkingLots;
 
 public class Access {
 	
@@ -31,7 +32,7 @@ public class Access {
 		} else {
 			float accessValueResult = (float) 0.0;
 			Duration timeDiff = Duration.between(this.parking.getNightDailyStartsAt(), this.parking.getNightDailyEndsAt());
-	        long secTimeDiff = timeDiff.getSeconds() > 0 ? timeDiff.getSeconds() : timeDiff.getSeconds() + 24 * 60 * 60; //diferença de segundos no periodo noturno
+	        long secTimeDiff = timeDiff.getSeconds() > 0 ? timeDiff.getSeconds() : timeDiff.getSeconds() + 24 * 60 * 60; // diferença de segundos no periodo noturno
 	        long minTimeDiff = timeDiff.getSeconds() > 0 ? timeDiff.getSeconds()/(60) : (timeDiff.getSeconds()+24*60*60)/(60);
 	        long hourTimeDiff = timeDiff.getSeconds() > 0 ? timeDiff.getSeconds()/(60*60) : (timeDiff.getSeconds()+24*60*60)/(60*60);
 	        LocalDateTime dtParkingStart = LocalDateTime.of(this.entryAt.toLocalDate(), this.parking.getNightDailyStartsAt()); //cria novo horario p/concatenando horario de entrada e saída

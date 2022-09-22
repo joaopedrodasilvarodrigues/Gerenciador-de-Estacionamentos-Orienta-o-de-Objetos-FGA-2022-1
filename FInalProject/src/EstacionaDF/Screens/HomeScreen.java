@@ -11,8 +11,8 @@ import EstacionaDF.SystemApp;
 public class HomeScreen extends DefaultScreen{
     // attributes
     private JLabel welcome;
-    private JButton userButton;
-    private JButton admButton;
+    private JButton userBtn;
+    private JButton admBtn;
     private JPanel boxPanel;
 
     // constructor
@@ -30,20 +30,20 @@ public class HomeScreen extends DefaultScreen{
         this.boxPanel.setLayout(new FlowLayout());
 
         
-        setUserButton(new JButton(getScreenSys().getTextContent("userBtn", 0)));
-        getUserButton().addActionListener(new ActionListener() {
+        setUserBtn(new JButton(getScreenSys().getTextContent("userBtn", 0)));
+        getUserBtn().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 toUser(UserScreen.USER_HOME);
             }
         });
-        setAdmButton(new JButton(getScreenSys().getTextContent("admBtn", 0)));
-        getAdmButton().addActionListener(new ActionListener() {
+        setAdmBtn(new JButton(getScreenSys().getTextContent("admBtn", 0)));
+        getAdmBtn().addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt2) {
-                //toAdm();
+                toAdm(AdmScreen.ADM_HOME);
             }});
-        this.boxPanel.add(this.userButton);
-        this.boxPanel.add(this.admButton);
+        this.boxPanel.add(this.userBtn);
+        this.boxPanel.add(this.admBtn);
         placeElementGrid(this.boxPanel, 0, 1, 3, 1);
         
         getScreenSys().pack();        
@@ -57,14 +57,14 @@ public class HomeScreen extends DefaultScreen{
     public void setWelcome(String welcome) {
         this.welcome = new JLabel(welcome);
     }
-    public JButton getUserButton() {
-        return userButton;
-    } public void setUserButton(JButton userButton) {
-        this.userButton = userButton;
-    } public JButton getAdmButton() {
-        return admButton;
-    } public void setAdmButton(JButton admButton) {
-        this.admButton = admButton;
+    public JButton getUserBtn() {
+        return userBtn;
+    } public void setUserBtn(JButton userBtn) {
+        this.userBtn = userBtn;
+    } public JButton getAdmBtn() {
+        return admBtn;
+    } public void setAdmBtn(JButton admBtn) {
+        this.admBtn = admBtn;
     } public JPanel getBoxPanel() {
         return boxPanel;
     } public void setBoxPanel(JPanel boxPanel) {
@@ -72,4 +72,3 @@ public class HomeScreen extends DefaultScreen{
     }
 
 }
-

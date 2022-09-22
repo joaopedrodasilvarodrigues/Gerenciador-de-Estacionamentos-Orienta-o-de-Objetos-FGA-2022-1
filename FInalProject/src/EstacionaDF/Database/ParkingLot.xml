@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<parkingLots>
+    <name>Estacionamento</name>
+    <capacity>40</capacity>
+    <hours format="hh:mm">
+        <startDay>09:00</startDay>
+        <endDay>17:00</endDay>
+        <startNight>20:00</startNight>
+        <endNight>05:00</endNight>
+    </hours>
+    <values monetarySystem="R$">
+        <fraction>5.00</fraction>
+        <hour type="discount">10</hour>
+        <day>200.00</day>
+        <night>240.00</night>
+        <month>500</month>
+        <event>3.50</event>
+        <taxReturn>20</taxReturn>
+    </values>
+</parkingLots>

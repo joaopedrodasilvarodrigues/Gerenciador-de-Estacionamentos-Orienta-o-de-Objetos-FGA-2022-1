@@ -1,21 +1,28 @@
 package EstacionaDF.Classes;
 
+import EstacionaDF.FileManager.CSVManager;
+
 public class Vehicles {
 
-	private String driver, plate, entrance, exit;
+	private String plate, entrance, exit;
 	private boolean monthly;
+	private final static String[] VehicleTableCategories = {"Plates", "Entrance", "Mensalist"};
 	
-	public Vehicles(String driver, String plate, String entrance, String exit, boolean monthly) {
-		this.driver = driver;
+	public Vehicles(String plate, String entrance, String exit, boolean monthly) {
 		this.plate = plate;
 		this.entrance = entrance;
 		this.exit = exit;
 		this.monthly = monthly;
+
 	}
-	
-	public String getDriver() {
-		return driver;
+	public Vehicles(String plates){
+		this.entrance = entrance;
+		this.monthly = monthly;
 	}
+	public static CSVManager platesTable() throws Exception {
+		return new CSVManager("plates", Vehicles.VehicleTableCategories);
+	}
+
 	
 	public String getPlate() {
 		return plate;
